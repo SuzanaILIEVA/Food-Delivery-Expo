@@ -2,20 +2,28 @@ import { View, Text, Image, TouchableOpacity } from "react-native";
 import React from "react";
 import { featured } from "../constants";
 import { useNavigation } from "@react-navigation/native";
-import MapView, { Marker } from "react-native-maps";
+import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import { themeColors } from "../theme";
 import * as Icon from "react-native-feather";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { selectRestaurant } from "../slices/restaurantSlice";
+import { emptyCart } from "../slices/cartSlice";
 
 const DeliveryScreen = () => {
   const restaurant = useSelector(selectRestaurant);
   const navigation = useNavigation();
+  const dispatch = useDispatch();
+
+  const cancelOrder = () => {
+    navigation.navigate("Home");
+    dispatch(emptyCart());
+  };
   return (
     <View style={{ flex: 1, width: " %100", height: " %100" }}>
       {/* Map view */}
 
       <MapView
+        provider={PROVIDER_GOOGLE} // Google Maps sağlamak için
         initialRegion={{
           latitude: restaurant.lat,
           longitude: restaurant.lng,
@@ -23,7 +31,7 @@ const DeliveryScreen = () => {
           longitudeDelta: 0.02,
         }}
         style={{ flex: 1 }}
-        mapType="standard"
+        mapType="standard" // Bunu "standard" yerine "hybrid", "satellite", veya "terrain" yapmayı deneyin.
       >
         <Marker
           coordinate={{
@@ -80,7 +88,7 @@ const DeliveryScreen = () => {
               />
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => navigation.navigate("Home")}
+              onPress={cancelOrder}
               className="bg-white p-2 rounded-full"
             >
               <Icon.X stroke={"red"} strokeWidth={4} />

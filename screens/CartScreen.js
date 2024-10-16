@@ -5,9 +5,13 @@ import { themeColors } from "../theme";
 import * as Icon from "react-native-feather";
 import { useNavigation } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { selectRestaurant } from "../slices/restaurantSlice";
-import { selectCartItems, selectCartTotal } from "../slices/cartSlice";
+import {
+  removeFromCart,
+  selectCartItems,
+  selectCartTotal,
+} from "../slices/cartSlice";
 
 const CartScreen = () => {
   const restaurant = useSelector(selectRestaurant);
@@ -16,9 +20,11 @@ const CartScreen = () => {
 
   const cartItems = useSelector(selectCartItems);
   const cartTotal = useSelector(selectCartTotal);
+  const dispatch = useDispatch();
+  const deliveryFee = 2;
 
   const [groupedItems, setGroupedItems] = useState({});
-  console.log(" GROUPITEMSSSSS==>> " + groupedItems);
+  // console.log(" GROUPITEMS==>> " + groupedItems);
 
   //sepetin içeriğini id'lerine göre gruplandırır.aynı ürünü tekrar tekrar göstermek yerine, sadece bir kere gösterip miktarını arttirir
   useEffect(() => {
@@ -31,12 +37,12 @@ const CartScreen = () => {
         group[item.id] = [item];
       }
       return group;
-    });
+    }, []);
 
-    console.log(
-      "groupedItems'ın yapısını inceleyin =>",
-      JSON.stringify(groupedItems, null, 2)
-    );
+    // console.log(
+    //   "groupedItems'ın yapısını inceleyin =>",
+    //   JSON.stringify(groupedItems, null, 2)
+    // );
 
     setGroupedItems(items);
   }, [cartItems]);
@@ -114,6 +120,7 @@ const CartScreen = () => {
               </Text>
               <Text className="font-semibold text-base">$ {dish.price}</Text>
               <TouchableOpacity
+                onPress={() => dispatch(removeFromCart({ id: dish.id }))}
                 className="p-1 rounded-full"
                 style={{ backgroundColor: themeColors.bgColor(1) }}
               >
@@ -136,15 +143,17 @@ const CartScreen = () => {
       >
         <View className="flex-row justify-between">
           <Text className="text-gray-700">Subtotal</Text>
-          <Text className="text-gray-700">$ 20</Text>
+          <Text className="text-gray-700">$ {cartTotal}</Text>
         </View>
         <View className="flex-row justify-between">
           <Text className="text-gray-700">Delivery Fee</Text>
-          <Text className="text-gray-700">$ 2</Text>
+          <Text className="text-gray-700">$ {deliveryFee}</Text>
         </View>
         <View className="flex-row justify-between">
           <Text className="text-gray-700 font-extrabold">Order Total</Text>
-          <Text className="text-gray-700 font-extrabold">$ 22</Text>
+          <Text className="text-gray-700 font-extrabold">
+            $ {deliveryFee + cartTotal}
+          </Text>
         </View>
 
         <View>

@@ -23,6 +23,8 @@ const FeaturedRow = ({ title, restaurants, description }) => {
         horizontal
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={{ paddingHorizontal: 15 }}
+        pagingEnabled
+        decelerationRate="fast" // Kaydırmanın hızını ayarla
         className="overflow-visible py-5"
       >
         {restaurants.map((restaurant, index) => {

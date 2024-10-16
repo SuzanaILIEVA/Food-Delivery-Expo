@@ -1,4 +1,10 @@
-import { View, Text, TouchableWithoutFeedback, Image } from "react-native";
+import {
+  View,
+  Text,
+  TouchableWithoutFeedback,
+  Image,
+  Dimensions,
+} from "react-native";
 import React from "react";
 import * as Icon from "react-native-feather";
 import { themeColors } from "../theme";
@@ -12,7 +18,7 @@ const RestaurantCard = ({ item }) => {
     >
       <View
         style={{
-          shadowColor: themeColors.bgColor(1),
+          shadowColor: themeColors.bgColor(9),
           shadowRadius: 7,
           elevation: 9,
         }}
